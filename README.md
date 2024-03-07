@@ -1,6 +1,7 @@
 # <h1 align = "center">Prime Numbers App developed with Jetpack Compose</h1>
 
-![](.media/demo.webm)
+[demo.webm](https://github.com/GGomezMorales/AndroidKt_Prime_Numbers/assets/123125407/2132c1a7-4e0d-4291-b1ae-3e7696a94604)
+
 
 Prime Numbers App is an Android application built with Jetpack Compose, designed to check and generate prime numbers. Whether you're a math enthusiast, a student, or just curious, this app provides an easy way to work with prime numbers.
 
