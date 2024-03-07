@@ -2,17 +2,25 @@ package com.ggomezmorales.primenumbers
 
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Send
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,14 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ggomezmorales.primenumbers.ui.theme.Asul
@@ -41,13 +47,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-@Preview
+
 @Composable
 fun Home(
     primeCalculatorModel: PrimeCalculatorModel = PrimeCalculatorModel()
-){
+) {
     val textShow = remember { mutableStateOf("") }
     val listResult = remember { mutableStateOf(emptyList<Int>()) }
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -69,11 +76,18 @@ fun Home(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             InputField(
-                text= "Enter an integer number (n ≥ 2)",
-                onButtonClicked = {value ->
-                    val isPrime = primeCalculatorModel.isPrime(value.toInt())
-                textShow.value = "The number ${value} ${if (isPrime) "is" else "is not"} prime."
-                })
+                text = "Enter an integer number (n ≥ 2)",
+                onButtonClicked = { value ->
+                    if (value.toInt() >= 2) {
+                        val isPrime = primeCalculatorModel.isPrime(value.toInt())
+                        textShow.value =
+                            "The number ${value} ${if (isPrime) "is" else "is not"} prime."
+                    } else {
+                        textShow.value = ""
+                        Toast.makeText(context, "Incorrect number", Toast.LENGTH_LONG).show()
+                    }
+                }
+            )
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -86,8 +100,14 @@ fun Home(
             )
             InputField(
                 text = "Enter the amount of prime numbers (n ≥ 0)",
-                onButtonClicked = {
-                        value -> listResult.value = primeCalculatorModel.giveMeXPrime(value.toInt())
+                onButtonClicked = { value ->
+
+                    if (value.toInt() >= 0) {
+                        listResult.value = primeCalculatorModel.giveMeXPrime(value.toInt())
+                    } else {
+                        listResult.value = emptyList()
+                        Toast.makeText(context, "Incorrect number", Toast.LENGTH_LONG).show()
+                    }
                 }
             )
             LazyColumn(
@@ -125,7 +145,7 @@ fun InputField(
     text: String = "Title",
     onButtonClicked: (String) -> Unit
 ) {
-    val inputNumber = remember{ mutableStateOf("")}
+    val inputNumber = remember { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -174,7 +194,7 @@ fun InputField(
                     .fillMaxWidth(0.9f),
                 colors = ButtonDefaults.buttonColors(Color(0xFFC7F9CC)),
                 onClick = {
-                    if (inputNumber.value.toIntOrNull() != null){
+                    if (inputNumber.value.toIntOrNull() != null) {
                         onButtonClicked(inputNumber.value)
                     }
                 }) {
